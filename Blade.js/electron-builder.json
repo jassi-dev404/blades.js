@@ -10,25 +10,20 @@
   ],
   "mac": {
     "target": [
-      "dmg",
-      "zip"
+      {
+        "target": "dmg",
+        "arch": ["arm64"]
+      }
     ],
-    "category": "public.app-category.developer-tools",
-    "icon": null
+    "category": "public.app-category.developer-tools"
   },
   "win": {
     "target": [
       {
-        "target": "nsis",
+        "target": "portable",
         "arch": ["x64"]
       }
-    ],
-    "icon": null
-  },
-  "nsis": {
-    "oneClick": false,
-    "allowToChangeInstallationDirectory": true,
-    "perMachine": true
+    ]
   },
   "linux": {
     "target": ["AppImage"],
