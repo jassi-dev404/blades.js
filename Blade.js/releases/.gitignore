@@ -1,4 +1,3 @@
-# Ignore all build outputs except README
 *
 !.gitignore
 !README.md
