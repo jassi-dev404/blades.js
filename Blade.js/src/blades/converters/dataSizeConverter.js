@@ -25,7 +25,6 @@ export default function dataSizeConverter(value, fromUnit, toUnit) {
 
   if (fromLower === toLower) return value;
 
-  // Conversion factors to bytes (using decimal SI units: 1 KB = 1000 bytes)
   const toBytes = {
     'bytes': 1,
     'kilobytes': 1000,

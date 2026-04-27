@@ -11,11 +11,11 @@
  *
  * @example
  * calculateDiscount(100, 20);
- * // { finalPrice: 80, savings: 20, discountPercent: 20 }
+ *
  *
  * @example
  * calculateDiscount(59.99, 15);
- * // { finalPrice: 50.99, savings: 9, discountPercent: 15 }
+ *
  */
 export default function calculateDiscount(originalPrice, discountPercent) {
   if (typeof originalPrice !== 'number' || typeof discountPercent !== 'number') {

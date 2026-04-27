@@ -5,7 +5,7 @@
  * @param {string} ellipsis - Ellipsis string (default '...')
  * @returns {string} Truncated string
  */
-export default function truncate(text, maxLength = 100, ellipsis = '...') {
+export default function truncate(text, maxLength = 100, ellipsis = '') {
   if (text.length <= maxLength) return text;
   return text.substring(0, maxLength - ellipsis.length).trim() + ellipsis;
 }

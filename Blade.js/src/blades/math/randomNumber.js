@@ -11,9 +11,9 @@
  * @throws {Error} If min >= max or count is not a positive integer.
  *
  * @example
- * randomNumber();                          // 42
- * randomNumber({ min: 1, max: 10, count: 3, integer: true }); // [3, 7, 1]
- * randomNumber({ min: 0, max: 1, integer: false });           // 0.6734...
+ * randomNumber();
+ * randomNumber({ min: 1, max: 10, count: 3, integer: true });
+ * randomNumber({ min: 0, max: 1, integer: false });
  */
 export default function randomNumber(options = {}) {
   const { min = 0, max = 100, count = 1, integer = true, seed = null } = options;
@@ -46,7 +46,6 @@ export default function randomNumber(options = {}) {
     return rand * (max - min) + min;
   }
 
-  // If seed is provided and count > 1, advance the seed for each number
   if (count === 1) {
     return generate();
   }

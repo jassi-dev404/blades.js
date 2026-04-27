@@ -19,11 +19,11 @@
  *
  * @example
  * calculateBMI(70, 175);
- * // { bmi: 22.9, category: 'Normal' }
+ *
  *
  * @example
  * calculateBMI(95, 170);
- * // { bmi: 32.9, category: 'Obese Class I' }
+ *
  */
 export default function calculateBMI(weightKg, heightCm) {
   if (typeof weightKg !== 'number' || typeof heightCm !== 'number') {

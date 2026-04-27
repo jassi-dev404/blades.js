@@ -8,11 +8,11 @@
  *
  * @example
  * fibonacci(5);
- * // [0n, 1n, 1n, 2n, 3n]
+ *
  *
  * @example
  * fibonacci(10);
- * // [0n, 1n, 1n, 2n, 3n, 5n, 8n, 13n, 21n, 34n]
+ *
  */
 export default function fibonacci(n) {
   if (typeof n !== 'number') {

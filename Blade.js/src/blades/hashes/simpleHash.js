@@ -14,9 +14,9 @@
  * @throws {Error} If the algorithm is not supported or text is not a string.
  *
  * @example
- * simpleHash('Hello');        // '1395334587' (djb2)
- * simpleHash('Hello', 'sdbm');// '837984931' (sdbm)
- * simpleHash('Hello', 'xor'); // '48' (xor)
+ * simpleHash('Hello');
+ * simpleHash('Hello', 'sdbm');
+ * simpleHash('Hello', 'xor');
  */
 export default function simpleHash(text, algorithm = 'djb2') {
   if (typeof text !== 'string') {
@@ -46,7 +46,7 @@ function djb2(str) {
   let hash = 5381;
   for (let i = 0; i < str.length; i++) {
     hash = ((hash << 5) + hash) + str.charCodeAt(i);
-    hash = hash & hash; // Convert to 32-bit integer
+    hash = hash & hash;
   }
   return Math.abs(hash);
 }
@@ -60,7 +60,7 @@ function sdbm(str) {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
     hash = str.charCodeAt(i) + (hash << 6) + (hash << 16) - hash;
-    hash = hash & hash; // Convert to 32-bit integer
+    hash = hash & hash;
   }
   return Math.abs(hash);
 }

@@ -22,7 +22,6 @@ export default function speedConverter(value, fromUnit, toUnit) {
 
   if (fromLower === toLower) return value;
 
-  // Conversion factors to m/s
   const toMetersPerSecond = {
     'km/h': 1 / 3.6,
     'mph': 0.44704,

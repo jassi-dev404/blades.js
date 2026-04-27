@@ -1,10 +1,3 @@
-// ============================================
-// BLADE.JS - Swiss Army Knife Functions
-// ============================================
-
-// --- GENERATORS ---
-export { default as colorPalette } from './generators/colorPalette';
-export { default as colorHarmony } from './generators/colorHarmony';
 export { default as passwordGenerator } from './generators/passwordGenerator';
 export { default as loremGenerator } from './generators/loremGenerator';
 export { default as uuidGenerator } from './generators/uuidGenerator';
@@ -12,7 +5,6 @@ export { default as patternGenerator } from './generators/patternGenerator';
 export { default as gradientGenerator } from './generators/gradientGenerator';
 export { default as boxShadowGenerator } from './generators/boxShadowGenerator';
 
-// --- CONVERTERS ---
 export { default as currencyConverter } from './converters/currencyConverter';
 export { default as temperatureConverter } from './converters/temperatureConverter';
 export { default as lengthConverter } from './converters/lengthConverter';
@@ -22,70 +14,46 @@ export { default as timeConverter } from './converters/timeConverter';
 export { default as dataSizeConverter } from './converters/dataSizeConverter';
 export { default as numberBaseConverter } from './converters/numberBaseConverter';
 export { default as romanNumeralConverter } from './converters/romanNumeralConverter';
-export { default as angleConverter } from './converters/angleConverter';
 
-// --- TEXT ---
 export { default as caseConverter } from './text/caseConverter';
 export { default as wordCounter } from './text/wordCounter';
 export { default as textReverser } from './text/textReverser';
-export { default as palindromeChecker } from './text/palindromeChecker';
 export { default as slugify } from './text/slugify';
 export { default as emailExtractor } from './text/emailExtractor';
-export { default as charFrequency } from './text/charFrequency';
 export { default as findReplace } from './text/findReplace';
 
-// --- ENCODERS ---
 export { default as base64Encode } from './encoders/base64Encode';
-export { default as urlEncode } from './encoders/urlEncode';
-export { default as htmlEntityEncode } from './encoders/htmlEntityEncode';
 export { default as hexConverter } from './encoders/hexConverter';
 export { default as binaryConverter } from './encoders/binaryConverter';
 export { default as morseCodeConverter } from './encoders/morseCodeConverter';
 
-// --- MATH ---
 export { default as bmiCalculator } from './math/bmiCalculator';
 export { default as percentageCalculator } from './math/percentageCalculator';
 export { default as discountCalculator } from './math/discountCalculator';
-export { default as ageCalculator } from './math/ageCalculator';
 export { default as factorial } from './math/factorial';
 export { default as fibonacci } from './math/fibonacci';
 export { default as primeChecker } from './math/primeChecker';
 export { default as gcdLcm } from './math/gcdLcm';
 export { default as randomNumber } from './math/randomNumber';
 
-// --- FORMATTERS ---
 export { default as fileSizeFormatter } from './formatters/fileSizeFormatter';
 
-// --- QR ---
 export { default as qrGenerator } from './qr/qrGenerator';
 
-// --- COLOR UTILS ---
 export { default as colorConverter } from './color-utils/colorConverter';
-export { default as colorContrast } from './color-utils/colorContrast';
 export { default as randomColor } from './color-utils/randomColor';
 
-// --- DATES ---
 export { default as dateDifference } from './dates/dateDifference';
 export { default as dateFormatter } from './dates/dateFormatter';
 
-// --- HASHES ---
 export { default as simpleHash } from './hashes/simpleHash';
 export { default as checksumGenerator } from './hashes/checksumGenerator';
 
-// --- STRINGS ---
 export { default as textDiff } from './strings/textDiff';
-export { default as templateEngine } from './strings/templateEngine';
 export { default as truncate } from './strings/truncate';
 export { default as initials } from './strings/initials';
 export { default as repeatText } from './strings/repeatText';
-export { default as censor } from './strings/censor';
 
-// --- MISC ---
-export { default as userAgent } from './misc/userAgent';
-export { default as viewportInfo } from './misc/viewportInfo';
-export { default as downloadFile } from './misc/downloadFile';
 export { default as timezoneConverter } from './misc/timezoneConverter';
-export { default as emojiExtractor } from './misc/emojiExtractor';
-export { default as typewriterEffect } from './misc/typewriterEffect';
 export { default as stopwatch } from './misc/stopwatch';
 export { default as timer } from './misc/timer';

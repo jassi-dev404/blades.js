@@ -6,10 +6,10 @@
  * @throws {Error} If bytes is negative or not a number.
  *
  * @example
- * formatFileSize(0);          // "0 bytes"
- * formatFileSize(1024);       // "1 KB"
- * formatFileSize(1572864);    // "1.5 MB"
- * formatFileSize(1073741824); // "1 GB"
+ * formatFileSize(0);
+ * formatFileSize(1024);
+ * formatFileSize(1572864);
+ * formatFileSize(1073741824);
  */
 export default function formatFileSize(bytes) {
   if (typeof bytes !== 'number') {
@@ -24,11 +24,9 @@ export default function formatFileSize(bytes) {
   const k = 1024;
   const i = Math.floor(Math.log(bytes) / Math.log(k));
 
-  // Cap at the largest unit
   const unitIndex = Math.min(i, units.length - 1);
   const value = bytes / Math.pow(k, unitIndex);
 
-  // Use 1 decimal for KB and above, 0 for bytes
   const decimals = unitIndex > 0 ? 1 : 0;
   return `${value.toFixed(decimals)} ${units[unitIndex]}`;
 }

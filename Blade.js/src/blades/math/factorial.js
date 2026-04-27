@@ -9,10 +9,10 @@
  * @throws {Error} If n is negative, not an integer, or not a number.
  *
  * @example
- * factorial(0);  // 1
- * factorial(5);  // 120
- * factorial(10); // 3628800
- * factorial(25); // 15511210043330985984000000n (BigInt)
+ * factorial(0);
+ * factorial(5);
+ * factorial(10);
+ * factorial(25);
  */
 export default function factorial(n) {
   if (typeof n !== 'number') {
@@ -25,7 +25,6 @@ export default function factorial(n) {
     throw new Error('Factorial is not defined for negative numbers.');
   }
 
-  // Use BigInt for values greater than 20 to avoid precision loss
   if (n > 20) {
     let result = BigInt(1);
     for (let i = 2; i <= n; i++) {
@@ -34,7 +33,6 @@ export default function factorial(n) {
     return result;
   }
 
-  // Standard number factorial for n <= 20
   if (n === 0 || n === 1) return 1;
 
   let result = 1;

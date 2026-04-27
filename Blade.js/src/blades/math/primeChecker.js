@@ -10,11 +10,11 @@
  *
  * @example
  * checkPrime(7);
- * // { isPrime: true, nearestPrime: 7, factors: [1, 7] }
+ *
  *
  * @example
  * checkPrime(10);
- * // { isPrime: false, nearestPrime: 11, factors: [1, 2, 5, 10] }
+ *
  */
 export default function checkPrime(n) {
   if (typeof n !== 'number') {
@@ -59,10 +59,8 @@ function _findNearestPrime(num) {
   let lower = num - 1;
   let upper = num + 1;
 
-  // Search both directions simultaneously
   while (lower >= 2 || upper > 0) {
     if (lower >= 2 && _isPrimeNumber(lower)) {
-      // Check if upper is also prime and closer
       if (upper > num && _isPrimeNumber(upper) && (upper - num) < (num - lower)) {
         return upper;
       }
@@ -75,7 +73,7 @@ function _findNearestPrime(num) {
     upper++;
   }
 
-  return 2; // Fallback (should not reach here for valid input)
+  return 2;
 }
 
 /**

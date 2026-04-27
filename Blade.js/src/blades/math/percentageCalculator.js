@@ -7,9 +7,9 @@
  * @throws {Error} If total is zero or if inputs are not numbers.
  *
  * @example
- * calculatePercentage(25, 100);  // 25
- * calculatePercentage(3, 7);     // 42.86
- * calculatePercentage(0, 50);    // 0
+ * calculatePercentage(25, 100);
+ * calculatePercentage(3, 7);
+ * calculatePercentage(0, 50);
  */
 export default function calculatePercentage(value, total) {
   if (typeof value !== 'number' || typeof total !== 'number') {

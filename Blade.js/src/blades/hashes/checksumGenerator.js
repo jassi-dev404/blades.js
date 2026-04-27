@@ -16,7 +16,7 @@
  *
  * @example
  * checksumGenerator('Hello World');
- * // { crc32: '1c291ca3', luhn: '4', simple: '1077' }
+ *
  */
 export default function checksumGenerator(text) {
   if (typeof text !== 'string') {
@@ -40,7 +40,6 @@ function crc32Like(str) {
   let crc = 0xffffffff;
   const table = [];
 
-  // Build lookup table
   for (let i = 0; i < 256; i++) {
     let c = i;
     for (let j = 0; j < 8; j++) {
@@ -64,7 +63,6 @@ function crc32Like(str) {
  * @returns {string} Single digit check digit.
  */
 function luhnCheckDigit(str) {
-  // Convert string to numeric values
   const digits = str
     .split('')
     .map((ch) => ch.charCodeAt(0))
@@ -74,7 +72,6 @@ function luhnCheckDigit(str) {
   let sum = 0;
   let alternate = false;
 
-  // Process from right to left
   for (let i = digits.length - 1; i >= 0; i--) {
     let n = digits[i];
     if (alternate) {
@@ -85,7 +82,6 @@ function luhnCheckDigit(str) {
     alternate = !alternate;
   }
 
-  // Check digit is the amount needed to make sum divisible by 10
   const checkDigit = (10 - (sum % 10)) % 10;
   return checkDigit.toString();
 }

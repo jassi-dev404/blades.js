@@ -11,33 +11,28 @@
  *
  * @example
  * const svg = qrGenerator("Hello World", 300);
- * // Returns: <svg ...><rect .../><rect .../>...</svg>
+ *
  */
 export default function qrGenerator(text, size = 200) {
   if (!text || typeof text !== 'string') {
     text = ' ';
   }
 
-  // Determine grid size based on text length (more text = more cells)
   const cellCount = Math.max(10, Math.min(40, text.length * 2 + 5));
   const cellSize = size / cellCount;
 
-  // Use character codes to determine which cells are filled
   const filled = new Set();
   for (let i = 0; i < text.length; i++) {
     const code = text.charCodeAt(i);
-    // Spread the influence of each character across the grid
     for (let j = 0; j < cellCount; j++) {
       const hash = (code * (i + 1) * (j + 1) + code * 31 + j * 17) % (cellCount * cellCount);
       filled.add(hash);
     }
   }
 
-  // Build SVG
-  let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" width="${size}" height="${size}">`;
+  let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}">`;
   svg += `<rect width="${size}" height="${size}" fill="white"/>`;
 
-  // Draw finder patterns (the three corner squares typical of QR codes)
   const finderSize = cellSize * 3;
   const drawFinder = (x, y) => {
     svg += `<rect x="${x}" y="${y}" width="${finderSize}" height="${finderSize}" fill="black"/>`;
@@ -49,11 +44,9 @@ export default function qrGenerator(text, size = 200) {
   drawFinder((cellCount - 3) * cellSize, 0);
   drawFinder(0, (cellCount - 3) * cellSize);
 
-  // Draw data cells
   for (let row = 0; row < cellCount; row++) {
     for (let col = 0; col < cellCount; col++) {
       const index = row * cellCount + col;
-      // Skip finder pattern areas
       if (row < 4 && col < 4) continue;
       if (row < 4 && col > cellCount - 5) continue;
       if (row > cellCount - 5 && col < 4) continue;

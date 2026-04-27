@@ -16,16 +16,14 @@
  * @throws {Error} If the input color format is unrecognized or values are out of range.
  *
  * @example
- * colorConverter('FF5733', 'rgb');  // 'rgb(255, 87, 51)'
- * colorConverter({ r: 255, g: 87, b: 51 }, 'hex'); // 'FF5733'
- * colorConverter({ h: 14, s: 100, l: 60 }, 'hex'); // 'FF5733'
+ * colorConverter('FF5733', 'rgb');
+ * colorConverter({ r: 255, g: 87, b: 51 }, 'hex');
+ * colorConverter({ h: 14, s: 100, l: 60 }, 'hex');
  */
 export default function colorConverter(color, toFormat) {
   let r, g, b;
 
-  // Parse input to RGB
   if (typeof color === 'string') {
-    // Hex string
     const hex = color.replace('#', '');
     if (!/^[0-9A-Fa-f]{6}$/.test(hex)) {
       throw new Error("Invalid hex color. Expected 6 hex digits (e.g. 'FF5733').");
@@ -39,7 +37,6 @@ export default function colorConverter(color, toFormat) {
       g = color.g;
       b = color.b;
     } else if ('h' in color && 's' in color && 'l' in color) {
-      // Convert HSL to RGB
       ({ r, g, b } = hslToRgb(color.h, color.s, color.l));
     } else {
       throw new Error("Color object must be either { r, g, b } or { h, s, l }.");
@@ -48,12 +45,10 @@ export default function colorConverter(color, toFormat) {
     throw new Error("Color must be a hex string, an RGB object, or an HSL object.");
   }
 
-  // Clamp RGB values
   r = Math.max(0, Math.min(255, Math.round(r)));
   g = Math.max(0, Math.min(255, Math.round(g)));
   b = Math.max(0, Math.min(255, Math.round(b)));
 
-  // Convert to target format
   switch (toFormat) {
     case 'hex':
       return toHex(r, g, b);

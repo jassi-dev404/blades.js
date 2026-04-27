@@ -3,23 +3,132 @@ import { delay, motion } from 'framer-motion'
 import * as blades from '../blades'
 
 const bladesList = [
-  {
-    name: 'colorPalette', label: 'Color Palette',
-    inputs: [{ key: 'count', type: 'number', default: 5 }],
-    execute: (v) => blades.colorPalette(v.count || 5), isColors: true
-  },
-  {
-    name: 'colorHarmony', label: 'Color Harmony',
-    inputs: [{ key: 'hex', type: 'text', default: '#FF5733' }, { key: 'type', type: 'select', default: 'complementary', options: ['complementary', 'analogous', 'triadic', 'split-complementary'] }],
-    execute: (v) => blades.colorHarmony(v.hex, v.type), isColors: true
-  },
-  {
-    name: 'passwordGenerator', label: 'Password Generator',
-    inputs: [{ key: 'length', type: 'number', default: 12 }, { key: 'uppercase', type: 'checkbox', default: true }, { key: 'lowercase', type: 'checkbox', default: true }, { key: 'numbers', type: 'checkbox', default: true }, { key: 'symbols', type: 'checkbox', default: true }],
-    execute: (v) => blades.passwordGenerator(v)
-  },
-  {
-    name: 'loremGenerator', label: 'Lorem Ipsum',
+   {
+     name: 'passwordGenerator', label: 'Password Generator',
+     inputs: [{ key: 'length', type: 'number', default: 12 }, { key: 'uppercase', type: 'checkbox', default: true }, { key: 'lowercase', type: 'checkbox', default: true }, { key: 'numbers', type: 'checkbox', default: true }, { key: 'symbols', type: 'checkbox', default: true }],
+     execute: (v) => blades.passwordGenerator(v)
+   },
+   {
+      name: 'cookieClicker', label: 'Cookie Clicker',
+      inputs: [], isInteractive: true,
+      render: () => {
+        const [cookies, setCookies] = useState(0);
+        const [cpc, setCpc] = useState(1);
+        const [cpcIncrement, setCpcIncrement] = useState(2);
+        const [cpcCost, setCpcCost] = useState(50);
+        const [grandmas, setGrandmas] = useState(0);
+        const [grandmaIncrement, setGrandmaIncrement] = useState(1);
+        const [farms, setFarms] = useState(0);
+        const [farmIncrement, setFarmIncrement] = useState(5);
+        const [factories, setFactories] = useState(0);
+        const [factoryIncrement, setFactoryIncrement] = useState(20);
+        const [mines, setMines] = useState(0);
+        const [mineIncrement, setMineIncrement] = useState(100);
+        const [grandmaCost, setGrandmaCost] = useState(100);
+        const [farmCost, setFarmCost] = useState(500);
+        const [factoryCost, setFactoryCost] = useState(2000);
+        const [mineCost, setMineCost] = useState(10000);
+
+        const autoCps = 
+          grandmas * grandmaIncrement + 
+          farms * farmIncrement + 
+          factories * factoryIncrement + 
+          mines * mineIncrement;
+
+        const handleClick = () => setCookies(prev => prev + cpc);
+
+        const buyUpgrade = (cost, effect, setCost, nextCost) => {
+          if (cookies >= cost) {
+            setCookies(prev => prev - cost);
+            effect();
+            setCost(nextCost);
+          }
+        };
+
+        useEffect(() => {
+          if (autoCps <= 0) return;
+          const id = setInterval(() => setCookies(prev => prev + autoCps), 1000);
+          return () => clearInterval(id);
+        }, [autoCps]);
+
+        return (
+          <div className="flex flex-col items-center gap-4 p-2">
+            <div className="text-2xl font-bold text-amber-800">🍪 Cookies: {cookies}</div>
+            
+            <div 
+              onClick={handleClick}
+              className="cursor-pointer hover:scale-105 active:scale-95 transition-transform select-none"
+              style={{ fontSize: '120px', lineHeight: '1' }}
+            >
+              🍪
+            </div>
+            <p className="text-sm text-gray-600">Click power: +{cpc} per click</p>
+            
+            {autoCps > 0 && (
+              <p className="text-sm text-gray-600">Auto Production: {autoCps}/s</p>
+            )}
+            
+            <div className="flex flex-col gap-2 mt-2 w-full max-w-xs">
+              <h4 className="font-medium text-gray-700">Upgrades</h4>
+              
+              <button
+                onClick={() => buyUpgrade(cpcCost, () => { setCpc(prev => prev + cpcIncrement); setCpcIncrement(prev => prev + 2); setCpcCost(Math.round(cpcCost + (cpcCost / 10) * 2)); })}
+                disabled={cookies < cpcCost}
+                className="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+              >
+                Add +{cpcIncrement} Click Power ({cpcCost} cookies, +{cpc}/click)
+              </button>
+              
+              <button
+                onClick={() => buyUpgrade(grandmaCost, () => { setGrandmas(prev => prev + grandmaIncrement); setGrandmaIncrement(prev => prev + 1); }, setGrandmaCost, Math.round(grandmaCost + (grandmaCost / 10) * 2))}
+                disabled={cookies < grandmaCost}
+                className="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+              >
+                Buy Grandma ({grandmaCost} cookies, +{grandmaIncrement}/s)
+              </button>
+              {grandmas > 0 && (
+                <p className="text-xs text-gray-500">Grandmas: {grandmas} (+{grandmas}/s)</p>
+              )}
+              
+              <button
+                onClick={() => buyUpgrade(farmCost, () => { setFarms(prev => prev + farmIncrement); setFarmIncrement(prev => prev + 5); }, setFarmCost, Math.round(farmCost + (farmCost / 10) * 2))}
+                disabled={cookies < farmCost}
+                className="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+              >
+                Buy Farm ({farmCost} cookies, +{farmIncrement}/s)
+              </button>
+              {farms > 0 && (
+                <p className="text-xs text-gray-500">Farms: {farms} (+{farms * 5}/s)</p>
+              )}
+              
+              <button
+                onClick={() => buyUpgrade(factoryCost, () => { setFactories(prev => prev + factoryIncrement); setFactoryIncrement(prev => prev + 20); }, setFactoryCost, Math.round(factoryCost + (factoryCost / 10) * 2))}
+                disabled={cookies < factoryCost}
+                className="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+              >
+                Buy Factory ({factoryCost} cookies, +{factoryIncrement}/s)
+              </button>
+              {factories > 0 && (
+                <p className="text-xs text-gray-500">Factories: {factories} (+{factories * 20}/s)</p>
+              )}
+              
+              <button
+                onClick={() => buyUpgrade(mineCost, () => { setMines(prev => prev + mineIncrement); setMineIncrement(prev => prev + 100); }, setMineCost, Math.round(mineCost + (mineCost / 10) * 2))}
+                disabled={cookies < mineCost}
+                className="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+              >
+                Buy Mine ({mineCost} cookies, +{mineIncrement}/s)
+              </button>
+              {mines > 0 && (
+                <p className="text-xs text-gray-500">Mines: {mines} (+{mines * 100}/s)</p>
+              )}
+            </div>
+          </div>
+        );
+      }
+    },
+   {
+     name: 'loremGenerator', label: 'Lorem Ipsum',
     inputs: [{ key: 'sentences', type: 'number', default: 3 }, { key: 'paragraphs', type: 'number', default: 0 }, { key: 'words', type: 'number', default: 0 }],
     execute: (v) => blades.loremGenerator(v)
   },
@@ -85,12 +194,15 @@ const bladesList = [
   {
     name: 'romanNumeralConverter', label: 'Roman Numerals',
     inputs: [{ key: 'value', type: 'text', default: '1994' }, { key: 'direction', type: 'select', default: 'toRoman', options: ['toRoman', 'fromRoman'] }],
-    execute: (v) => blades.romanNumeralConverter(v.value, v.direction)
-  },
-  {
-    name: 'angleConverter', label: 'Angle',
-    inputs: [{ key: 'value', type: 'number', default: 180 }, { key: 'fromUnit', type: 'select', default: 'degrees', options: ['degrees', 'radians', 'gradians', 'turns'] }, { key: 'toUnit', type: 'select', default: 'radians', options: ['degrees', 'radians', 'gradians', 'turns'] }],
-    execute: (v) => `${v.value} ${v.fromUnit} = ${blades.angleConverter(v.value, v.fromUnit, v.toUnit)} ${v.toUnit}`
+    execute: (v) => {
+      try {
+        return v.direction === 'toRoman'
+          ? blades.romanNumeralConverter(v.value, 'toRoman')
+          : blades.romanNumeralConverter(v.value, 'fromRoman');
+      } catch (e) {
+        return 'Error: ' + e.message;
+      }
+    }
   },
   {
     name: 'caseConverter', label: 'Case Converter',
@@ -108,11 +220,6 @@ const bladesList = [
     execute: (v) => blades.textReverser(v.text, v.mode)
   },
   {
-    name: 'palindromeChecker', label: 'Palindrome',
-    inputs: [{ key: 'text', type: 'text', default: 'racecar' }],
-    execute: (v) => JSON.stringify(blades.palindromeChecker(v.text))
-  },
-  {
     name: 'slugify', label: 'Slugify',
     inputs: [{ key: 'text', type: 'text', default: 'Hello World — Café & Résumé' }, { key: 'separator', type: 'text', default: '-' }],
     execute: (v) => blades.slugify(v.text, { separator: v.separator })
@@ -123,11 +230,6 @@ const bladesList = [
     execute: (v) => blades.emailExtractor(v.text).join(', ') || 'No emails found'
   },
   {
-    name: 'charFrequency', label: 'Char Frequency',
-    inputs: [{ key: 'text', type: 'text', default: 'hello world' }],
-    execute: (v) => blades.charFrequency(v.text).slice(0, 10).map(c => `${c.char}: ${c.count} (${c.percentage}%)`).join('\n')
-  },
-  {
     name: 'findReplace', label: 'Find & Replace',
     inputs: [{ key: 'text', type: 'textarea', default: 'Hello world, hello again' }, { key: 'find', type: 'text', default: 'hello' }, { key: 'replace', type: 'text', default: 'hi' }, { key: 'caseSensitive', type: 'checkbox', default: false }, { key: 'replaceAll', type: 'checkbox', default: true }],
     execute: (v) => { const r = blades.findReplace(v.text, v.find, v.replace, { caseSensitive: v.caseSensitive, replaceAll: v.replaceAll }); return `Result: "${r.result}"\nReplacements: ${r.count}`; }
@@ -136,16 +238,6 @@ const bladesList = [
     name: 'base64Encode', label: 'Base64',
     inputs: [{ key: 'text', type: 'text', default: 'Hello World' }, { key: 'mode', type: 'select', default: 'encode', options: ['encode', 'decode'] }],
     execute: (v) => blades.base64Encode(v.text, v.mode)
-  },
-  {
-    name: 'urlEncode', label: 'URL Encode',
-    inputs: [{ key: 'text', type: 'text', default: 'Hello World!' }, { key: 'mode', type: 'select', default: 'encode', options: ['encode', 'decode'] }],
-    execute: (v) => blades.urlEncode(v.text, v.mode)
-  },
-  {
-    name: 'htmlEntityEncode', label: 'HTML Entities',
-    inputs: [{ key: 'text', type: 'text', default: '<div class="test">' }, { key: 'mode', type: 'select', default: 'encode', options: ['encode', 'decode'] }],
-    execute: (v) => blades.htmlEntityEncode(v.text, v.mode)
   },
   {
     name: 'hexConverter', label: 'Hex',
@@ -178,11 +270,6 @@ const bladesList = [
     execute: (v) => { const r = blades.discountCalculator(v.price, v.discountPercent); return `Final: $${r.finalPrice}\nSave: $${r.savings}`; }
   },
   {
-    name: 'ageCalculator', label: 'Age',
-    inputs: [{ key: 'birthDate', type: 'date', default: '1995-06-15' }],
-    execute: (v) => { const r = blades.ageCalculator(v.birthDate); return `${r.years}y ${r.months}m ${r.days}d\nNext birthday: ${r.nextBirthday}`; }
-  },
-  {
     name: 'factorial', label: 'Factorial',
     inputs: [{ key: 'n', type: 'number', default: 10 }],
     execute: (v) => `${v.n}! = ${blades.factorial(v.n)}`
@@ -198,9 +285,9 @@ const bladesList = [
     execute: (v) => { const r = blades.primeChecker(v.n); return `Prime: ${r.isPrime}\nNearest: ${r.nearestPrime}\nFactors: ${r.factors.join(', ')}`; }
   },
   {
-    name: 'gcdLcm', label: 'GCD & LCM',
+    name: 'gcdLcm', label: 'HCF & LCM',
     inputs: [{ key: 'a', type: 'number', default: 12 }, { key: 'b', type: 'number', default: 18 }],
-    execute: (v) => { const r = blades.gcdLcm(v.a, v.b); return `GCD: ${r.gcd}\nLCM: ${r.lcm}`; }
+    execute: (v) => { const r = blades.gcdLcm(v.a, v.b); return `HCF: ${r.gcd}\nLCM: ${r.lcm}`; }
   },
   {
     name: 'randomNumber', label: 'Random Number',
@@ -214,18 +301,13 @@ const bladesList = [
   },
   {
     name: 'qrGenerator', label: 'QR Code',
-    inputs: [{ key: 'text', type: 'text', default: 'https://example.com' }, { key: 'size', type: 'number', default: 200 }],
+    inputs: [{ key: 'text', type: 'text', default: 'https://example.com' }, { key: 'size', type: 'number', default: 330, max: 500 }],
     execute: (v) => 'SVG rendered below', isSvg: true
   },
   {
     name: 'colorConverter', label: 'Color Converter',
     inputs: [{ key: 'color', type: 'text', default: '#FF5733' }, { key: 'toFormat', type: 'select', default: 'rgb', options: ['rgb', 'hsl'] }],
     execute: (v) => JSON.stringify(blades.colorConverter(v.color, v.toFormat))
-  },
-  {
-    name: 'colorContrast', label: 'Color Contrast',
-    inputs: [{ key: 'color1', type: 'text', default: '#000000' }, { key: 'color2', type: 'text', default: '#FFFFFF' }],
-    execute: (v) => { const r = blades.colorContrast(v.color1, v.color2); return `Ratio: ${r.ratio}:1\nLevel: ${r.level}`; }
   },
   {
     name: 'randomColor', label: 'Random Color',
@@ -255,12 +337,7 @@ const bladesList = [
   {
     name: 'textDiff', label: 'Text Diff',
     inputs: [{ key: 'text1', type: 'textarea', default: 'Hello world' }, { key: 'text2', type: 'textarea', default: 'Hello universe' }],
-    execute: (v) => { const r = blades.textDiff(v.text1, v.text2); return `Added: ${r.added}\nRemoved: ${r.removed}\nSimilarity: ${r.similarity}%`; }
-  },
-  {
-    name: 'templateEngine', label: 'Template',
-    inputs: [{ key: 'template', type: 'textarea', default: 'Hello {{name}}, age {{age}}' }, { key: 'data', type: 'textarea', default: '{"name":"John","age":30}' }],
-    execute: (v) => { try { return blades.templateEngine(v.template, JSON.parse(v.data)); } catch (e) { return 'Invalid JSON'; } }
+    execute: (v) => { const r = blades.textDiff(v.text1, v.text2); return `Added: ${r.added.join(', ')}\nRemoved: ${r.removed.join(', ')}`; }
   },
   {
     name: 'truncate', label: 'Truncate',
@@ -278,96 +355,9 @@ const bladesList = [
     execute: (v) => blades.repeatText(v.text, v.count)
   },
   {
-    name: 'cookieClicker', label: 'Cookie Clicker',
-    inputs: [], isInteractive: true,
-    render: () => {
-      const [cookies, setCookies] = useState(0)
-      const [perClick, setPerClick] = useState(1)
-      const [perSecond, setPerSecond] = useState(0)
-      const [grandmaCost, setGrandmaCost] = useState(50)
-      const [clickPowerCost, setClickPowerCost] = useState(25)
-      const [grandmas, setGrandmas] = useState(0)
-      const [clickPowerLevel, setClickPowerLevel] = useState(0)
-      useEffect(() => {
-        if (perSecond === 0) return
-        const iv = setInterval(() => {
-          setCookies(prev => prev + perSecond)
-        }, 1000)
-        return () => clearInterval(iv)
-      }, [perSecond])
-      const buyClickPower = () => {
-        if (cookies >= clickPowerCost) {
-          setCookies(prev => prev - clickPowerCost)
-          setClickPowerLevel(prev => prev + 1)
-          setPerClick(prev => prev + 1)
-          setClickPowerCost(prev => Math.floor(prev * 1.5))
-        }
-      }
-      const buyGrandma = () => {
-        if (cookies >= grandmaCost) {
-          setCookies(prev => prev - grandmaCost)
-          setGrandmas(prev => prev + 1)
-          setPerSecond(prev => prev + 5)
-          setGrandmaCost(prev => Math.floor(prev * 1.15))
-        }
-      }
-      return (
-        <div className="text-center">
-          <div style={{ fontSize: 24, marginBottom: 10 }}>🍪 {Math.floor(cookies)} cookies</div>
-          <div style={{ fontSize: 12, marginBottom: 10, color: '#666' }}>
-            per click: {perClick} | per second: {perSecond}
-          </div>
-          <button
-            onClick={() => setCookies(prev => prev + perClick)}
-            style={{ fontSize: 48, padding: '20px 30px', borderRadius: '50%', border: 'none', background: 'none', cursor: 'pointer', transition: 'transform 0.1s' }}
-            onMouseDown={e => e.currentTarget.style.transform = 'scale(0.9)'}
-            onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
-            onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
-          >
-            🍪
-          </button>
-          <div style={{ marginTop: 15, display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <button
-              onClick={buyClickPower}
-              disabled={cookies < clickPowerCost}
-              style={{ padding: '6px 12px', opacity: cookies >= clickPowerCost ? 1 : 0.5, cursor: cookies >= clickPowerCost ? 'pointer' : 'not-allowed', borderRadius: 4, border: '1px solid #ccc' }}
-            >
-              Click Power ({clickPowerLevel}) - {clickPowerCost} 🍪
-            </button>
-            <button
-              onClick={buyGrandma}
-              disabled={cookies < grandmaCost}
-              style={{ padding: '6px 12px', opacity: cookies >= grandmaCost ? 1 : 0.5, cursor: cookies >= grandmaCost ? 'pointer' : 'not-allowed', borderRadius: 4, border: '1px solid #ccc' }}
-            >
-              Grandma ({grandmas}) - {grandmaCost} 🍪
-            </button>
-          </div>
-        </div>
-      )
-    }
-  },
-  {
-    name: 'userAgent', label: 'User Agent',
-    inputs: [], execute: () => JSON.stringify(blades.userAgent(), null, 2)
-  },
-  {
-    name: 'viewportInfo', label: 'Viewport',
-    inputs: [], execute: () => JSON.stringify(blades.viewportInfo(), null, 2)
-  },
-  {
-    name: 'downloadFile', label: 'Download',
-    inputs: [{ key: 'content', type: 'textarea', default: 'Hello World' }, { key: 'filename', type: 'text', default: 'hello.txt' }, { key: 'mimeType', type: 'text', default: 'text/plain' }],
-    execute: (v) => { blades.downloadFile(v.content, v.filename, v.mimeType); return 'Downloaded'; }
-  },
-  {
     name: 'timezoneConverter', label: 'Time',
     inputs: [{ key: 'timezone', type: 'select', default: 'America/New_York', options: ['America/New_York', 'America/Chicago', 'America/Denver', 'America/Los_Angeles', 'Europe/London', 'Europe/Paris', 'Asia/Tokyo', 'Asia/Shanghai', 'Asia/Kolkata', 'Australia/Sydney'] }],
     execute: (v) => new Date().toLocaleString('en-US', { timeZone: v.timezone })
-  },
-  {
-    name: 'emojiExtractor', label: 'Emoji',
-    inputs: [{ key: 'text', type: 'text', default: 'Hello 👋 World 🌍🔥' }],
-    execute: (v) => { const r = blades.emojiExtractor(v.text); return r.length ? r.join(', ') : 'None found'; }
   },
   {
     name: 'stopwatch', label: 'Stopwatch',
@@ -396,8 +386,9 @@ const bladesList = [
   },
   {
     name: 'timer', label: 'Timer',
-    inputs: [{ key: 'duration', type: 'number', default: 5 }],
+    inputs: [{ key: 'duration', type: 'number', default: 0 }],
     isInteractive: true,
+    className: 'col-start-2',
     render: (props) => {
       const dur = (props.duration || 5) * 1000
       const [time, setTime] = useState(dur)
@@ -424,17 +415,36 @@ const bladesList = [
             <button onClick={() => addTime(1000)}>+1s</button>{' '}
             <button onClick={() => addTime(5000)}>+5s</button>{' '}
             <button onClick={() => addTime(10000)}>+10s</button>{' '}
-            <button onClick={() => addTime(60000)}>+60s</button>
+            <button onClick={() => addTime(60000)}>+60s</button>{' '}
+            <button onClick={() => time >= 1000 && addTime(-1000)}>-1s</button>{' '}
+            <button onClick={() => time >= 5000 && addTime(-5000)}>-5s</button>{' '}
+            <button onClick={() => time >= 10000 && addTime(-10000)}>-10s</button>
           </div>
         </div>
       )
-    }
-  }
-]
+     }
+   }
+ ]
 
-const currencyCodes = ['USD', 'EUR', 'GBP', 'INR', 'JPY', 'CNY', 'CHF', 'CAD', 'AUD', 'KRW', 'BRL', 'MXN', 'RUB', 'ZAR', 'SGD', 'HKD', 'NOK', 'SEK', 'DKK', 'NZD', 'THB', 'MYR', 'PHP', 'IDR', 'PLN', 'TRY', 'ILS', 'ARS', 'COP', 'VND', 'EGP', 'PKR', 'NGN', 'AED', 'SAR', 'CZK', 'HUF', 'CLP', 'PEN']
 
-// FIX 3: Reusable card variant for stagger children
+const currencyCodes = [
+  'USD', 'EUR', 'GBP', 'INR', 'JPY', 'CNY', 'CHF', 'CAD', 'AUD', 'KRW', 
+  'BRL', 'MXN', 'RUB', 'ZAR', 'SGD', 'HKD', 'NOK', 'SEK', 'DKK', 'NZD', 
+  'THB', 'MYR', 'PHP', 'IDR', 'PLN', 'TRY', 'ILS', 'ARS', 'COP', 'VND', 
+  'EGP', 'PKR', 'NGN', 'AED', 'SAR', 'CZK', 'HUF', 'CLP', 'PEN', 'BDT', 
+  'KES', 'GHS', 'UAH', 'RON', 'BGN', 'ISK', 'TWD', 'LKR', 'MMK', 'MAD', 
+  'JOD', 'QAR', 'KWD', 'BHD', 'OMR', 'UZS', 'TMT', 'AZN', 'GEL', 'AMD', 
+  'KZT', 'BYN', 'MDL', 'RSD', 'ALL', 'MKD', 'BAM', 'TND', 'DZD', 'LYD', 
+  'ANG', 'XCD', 'BBD', 'JMD', 'TTD', 'BZD', 'GTQ', 'HNL', 'NIO', 'CRC', 
+  'PAB', 'DOP', 'UYU', 'PYG', 'BOB', 'SVC', 'GYD', 'SRD', 'FKP', 'GIP', 
+  'SHP', 'JEP', 'GGP', 'IMP', 'AFN', 'IQD', 'IRR', 'KPW', 'LBP', 'MVR', 
+  'NPR', 'SYP', 'YER', 'BTN', 'KGS', 'TJS', 'MNT', 'LAK', 'KHR', 'BND', 
+  'MOP', 'NAD', 'BWP', 'MUR', 'SCR', 'MWK', 'ZMW', 'MZN', 'AOA', 'UGX', 
+  'TZS', 'RWF', 'ETB', 'SOS', 'DJF', 'ERN', 'SDG', 'SSP', 'CDF', 'XOF', 
+  'XAF', 'KMF', 'MGA', 'BIF', 'SLL', 'LRD', 'GMD', 'GNF', 'CVE', 'STN', 
+  'SBD', 'TOP', 'WST', 'VUV', 'FJD', 'PGK', 'AWG', 'KYD', 'HTG', 'CUC', 
+  'CUP', 'MRU', 'SZL', 'LSL', 'BSD', 'BMD', 'XPF', 'TVD', 'MRO', 'STD'
+];
 const cardVariants = {
   hidden: { opacity: 0, y: 16 },
   show: { opacity: 1, y: 0, transition: { duration: 0.3 } }
@@ -447,33 +457,23 @@ function BladeCard({ blade }) {
     return init
   })
   const [output, setOutput] = useState('')
-  const [colorOutput, setColorOutput] = useState([])
   const [svgOutput, setSvgOutput] = useState('')
 
   const handleChange = (key, value) => setValues(prev => ({ ...prev, [key]: value }))
 
   const handleExecute = async () => {
-    if (blade.isColors) {
-      setColorOutput(blade.execute(values))
-      setOutput('')
-      setSvgOutput('')
-      return
-    }
     if (blade.isSvg) {
       setSvgOutput(blades.qrGenerator(values.text, values.size))
-      setOutput('SVG rendered below')
-      setColorOutput([])
+      setOutput('')
       return
     }
     setOutput(blade.execute(values))
-    setColorOutput([])
     setSvgOutput('')
   }
 
   if (blade.isInteractive) {
     return (
-      // FIX 3: Wrap interactive cards in motion.div so stagger works
-      <motion.div variants={cardVariants} whileHover={{ scale: 1.03 }} className="border border-gray-300 rounded-lg p-4">
+      <motion.div variants={cardVariants} whileHover={{ scale: 1.03 }} className={`border border-gray-300 rounded-lg p-4 bg-white shadow-sm ${blade.className || ''}`}>
         <h3 className="text-lg font-semibold mb-3">{blade.label}</h3>
         {blade.render({ ...values, handleChange })}
       </motion.div>
@@ -481,57 +481,113 @@ function BladeCard({ blade }) {
   }
 
   return (
-    // FIX 3: Wrap every card in motion.div so stagger works
-    <motion.div variants={cardVariants} whileHover={{ scale: 1.03 }} className="border border-gray-300 rounded-lg p-4">
+    <motion.div variants={cardVariants} whileHover={{ scale: 1.03 }} className={`flex flex-col border border-gray-300 rounded-lg p-4 bg-white shadow-sm ${blade.className || ''}`}>
       <h3 className="text-lg font-semibold mb-3">{blade.label}</h3>
-      {blade.inputs.map(input => (
-        <div key={input.key} className="mb-2">
-          <label className="block text-sm mb-1">{input.key}</label>
-          {input.type === 'select' ? (
-            <select value={values[input.key]} onChange={e => handleChange(input.key, e.target.value)} className="w-full p-1.5 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[rgb(55 65 81)] focus:border-transparent">
-              {input.options.map(opt => <option key={opt} value={opt}>{opt}</option>)}
-            </select>
-          ) : input.type === 'currency' ? (
-            <select value={values[input.key]} onChange={e => handleChange(input.key, e.target.value)} className="w-full p-1.5 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[rgb(55 65 81)] focus:border-transparent">
-              {currencyCodes.map(c => <option key={c} value={c}>{c}</option>)}
-            </select>
-          ) : input.type === 'checkbox' ? (
-            <input type="checkbox" checked={values[input.key]} onChange={e => handleChange(input.key, e.target.checked)} className="focus:outline-none focus:ring-2 focus:ring-[rgb(55 65 81)] rounded" />
-          ) : input.type === 'textarea' ? (
-            <textarea value={values[input.key]} onChange={e => handleChange(input.key, e.target.value)} rows={2} className="w-full p-1.5 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[rgb(55 65 81)] focus:border-transparent" />
-          ) : (
-            <input type={input.type} value={values[input.key]} onChange={e => handleChange(input.key, e.target.type === 'number' ? +e.target.value : e.target.value)} className="w-full p-1.5 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[rgb(55 65 81)] focus:border-transparent" />
+      
+      <div className="flex-grow">
+        {blade.inputs.map(input => (
+          <div key={input.key} className="mb-3">
+            <label className="block text-sm font-medium mb-1 text-gray-700 capitalize">{input.key.replace(/([A-Z])/g, ' $1').trim()}</label>
+            {input.type === 'select' ? (
+              <select value={values[input.key]} onChange={e => handleChange(input.key, e.target.value)} className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[rgb(55,65,81)] focus:border-transparent transition-shadow">
+                {input.options.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+              </select>
+            ) : input.type === 'currency' ? (
+              <select value={values[input.key]} onChange={e => handleChange(input.key, e.target.value)} className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[rgb(55,65,81)] focus:border-transparent transition-shadow">
+                {currencyCodes.map(c => <option key={c} value={c}>{c}</option>)}
+              </select>
+            ) : input.type === 'checkbox' ? (
+              <input type="checkbox" checked={values[input.key]} onChange={e => handleChange(input.key, e.target.checked)} className="w-4 h-4 text-[rgb(55,65,81)] focus:ring-[rgb(55,65,81)] border-gray-300 rounded cursor-pointer" />
+            ) : input.type === 'textarea' ? (
+              <textarea value={values[input.key]} onChange={e => handleChange(input.key, e.target.value)} rows={2} className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[rgb(55,65,81)] focus:border-transparent transition-shadow" />
+            ) : (
+              <input
+                type={input.type}
+                value={values[input.key]}
+                onChange={e => handleChange(input.key, e.target.type === 'number' ? +e.target.value : e.target.value)}
+                {...(input.max && { max: input.max })}
+                {...(input.min && { min: input.min })}
+                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[rgb(55,65,81)] focus:border-transparent transition-shadow" />
+            )}
+          </div>
+        ))}
+      </div>
+
+      {svgOutput && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-4 text-center">
+          <div dangerouslySetInnerHTML={{ __html: svgOutput }} className="flex justify-center bg-gray-50 p-4 rounded border border-gray-100" />
+          <motion.button 
+            whileHover={{ scale: 1.05 }} 
+            whileTap={{ scale: 0.95 }}
+            onClick={() => {
+              const size = Math.min(parseInt(values.size) || 200, 500);
+              const canvas = document.createElement('canvas');
+              canvas.width = size;
+              canvas.height = size;
+              const ctx = canvas.getContext('2d');
+              ctx.fillStyle = 'white';
+              ctx.fillRect(0, 0, size, size);
+              const svgStr = svgOutput.replace(/<svg[^>]*>/, `<svg xmlns="http://w3.org" width="${size}" height="${size}">`);
+              const img = new Image();
+              img.onload = () => {
+                ctx.drawImage(img, 0, 0, size, size);
+                const a = document.createElement('a');
+                a.download = 'qrcode.png';
+                a.href = canvas.toDataURL('image/png');
+                a.click();
+              };
+              img.onerror = () => { alert('Error generating image'); };
+              img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgStr)));
+            }} 
+            className="mt-3 inline-block px-4 py-2 bg-gray-800 text-white rounded-md text-sm font-medium shadow-sm"
+          >
+            Download PNG
+          </motion.button>
+        </motion.div>
+      )}
+
+      {!blade.isInteractive && (
+        <div className="mt-4">
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={handleExecute}
+            className="w-full py-2 bg-[rgb(55,65,81)] text-white font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-[rgb(55,65,81)]"
+          >
+            Execute
+          </motion.button>
+
+          {output && (
+            <motion.div 
+              initial={{ opacity: 0, y: -5 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              className="mt-3 p-3 bg-gray-50 border border-gray-200 rounded-md text-sm font-mono whitespace-pre-wrap break-all text-gray-800"
+            >
+              {output}
+            </motion.div>
           )}
         </div>
-      ))}
-      <motion.button whileHover={{ scale: 1.1, backgroundColor: "rgb(55 65 81)" }} onClick={handleExecute} className="mt-2 px-4 py-1.5 bg-gray-800 text-white rounded">Execute</motion.button>
-      {colorOutput.length > 0 && (
-        <div className="flex gap-2 mt-3 flex-wrap">
-          {colorOutput.map((c, i) => (
-            <div key={i} className="text-center">
-              <div className="w-14 h-14 rounded-md border border-gray-300 mb-1" style={{ backgroundColor: c }}></div>
-              <code className="text-xs">{c}</code>
-            </div>
-          ))}
-        </div>
       )}
-      {output && <pre className="bg-gray-100 p-3 mt-2 whitespace-pre-wrap break-words text-sm">{output}</pre>}
-      {svgOutput && <div dangerouslySetInnerHTML={{ __html: svgOutput }} />}
     </motion.div>
   )
 }
 
 export default function Blades() {
-  // FIX 2: Fixed typo "transiton" → "transition"
+  const [search, setSearch] = useState('')
   const containerVariants = {
     hidden: { opacity: 1 },
     show: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.07, // Slightly faster stagger for many items
+        staggerChildren: 0.07,
       },
     },
   }
+
+  const filteredBlades = bladesList.filter(blade =>
+    blade.label.toLowerCase().includes(search.toLowerCase()) ||
+    blade.name.toLowerCase().includes(search.toLowerCase())
+  )
 
   return (
     <div className="p-10 font-mono">
@@ -556,7 +612,7 @@ export default function Blades() {
             }}
             className="text-4xl mb-2"
           >
-            Blades 
+            Blades
             <span> </span>
             <span className='text-xl text-gray-600'>
               (a swiss army knife web app for all your utility needs)
@@ -567,24 +623,27 @@ export default function Blades() {
               hidden: { opacity: 0 },
               show: { opacity: 1 }
             }}
-            className="mb-8"
+            className="mb-4"
           >
-            {bladesList.length} blades
+            {filteredBlades.length} blades
           </motion.p>
+          <input
+            type="search"
+            placeholder="Search blades..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="mb-8 p-2 border border-gray-300 rounded w-full max-w-xs focus:outline-none focus:ring-2 focus:ring-[rgb(55,65,81)] focus:border-transparent"
+          />
         </motion.section>
-
       </div>
 
-
-      {/* FIX 3: Removed broken nested grids — motion.section IS the stagger parent,
-          cards render directly inside the grid as motion.div children */}
       <motion.div
         variants={containerVariants}
         initial="hidden"
         animate="show"
         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
       >
-        {bladesList.map(blade => (
+        {filteredBlades.map(blade => (
           <BladeCard key={blade.name} blade={blade} />
         ))}
       </motion.div>

@@ -12,11 +12,11 @@
  *
  * @example
  * gcdLcm(12, 18);
- * // { gcd: 6, lcm: 36 }
+ *
  *
  * @example
  * gcdLcm(7, 13);
- * // { gcd: 1, lcm: 91 }
+ *
  */
 export default function gcdLcm(a, b) {
   if (typeof a !== 'number' || typeof b !== 'number') {
@@ -29,7 +29,6 @@ export default function gcdLcm(a, b) {
   const absA = Math.abs(a);
   const absB = Math.abs(b);
 
-  // Euclidean algorithm for GCD
   function euclideanGCD(x, y) {
     while (y !== 0) {
       const temp = y;
@@ -41,8 +40,6 @@ export default function gcdLcm(a, b) {
 
   const gcd = euclideanGCD(absA, absB);
 
-  // LCM using the identity: LCM(a, b) = |a * b| / GCD(a, b)
-  // Divide first to avoid potential overflow with large numbers
   const lcm = absA === 0 || absB === 0 ? 0 : (absA / gcd) * absB;
 
   return { gcd, lcm };

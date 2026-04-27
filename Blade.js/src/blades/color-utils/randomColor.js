@@ -11,10 +11,10 @@
  * @returns {string} The generated color string in the requested format.
  *
  * @example
- * randomColor();                        // 'A3F2C1'
- * randomColor({ format: 'rgb' });       // 'rgb(163, 242, 193)'
- * randomColor({ hue: 'warm' });         // 'FF6B35'
- * randomColor({ hue: 'pastel' });       // 'B8D4E8'
+ * randomColor();
+ * randomColor({ format: 'rgb' });
+ * randomColor({ hue: 'warm' });
+ * randomColor({ hue: 'pastel' });
  */
 export default function randomColor(options = {}) {
   const { format = 'hex', hue = 'random' } = options;
@@ -55,7 +55,6 @@ export default function randomColor(options = {}) {
     l = rand(35, 65);
   }
 
-  // Convert HSL to RGB
   function hslToRgb(h, s, l) {
     h /= 360;
     s /= 100;
